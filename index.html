@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GAS | SMAN 5 Palu</title>
+    
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Custom Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        
+        /* Smooth scrolling */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Iframe optimization */
+        iframe {
+            display: block;
+            border: none;
+        }
+    </style>
+</head>
+<body class="h-screen bg-[#f8fafc] text-slate-800 flex flex-col overflow-hidden">
+
+    <!-- Header -->
+    <header class="sticky top-0 z-30 bg-white/70 backdrop-blur-lg border-b border-slate-200/60 shadow-sm h-14 shrink-0">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-full flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                
+                <!-- Icon Container -->
+                <div id="header-icon-container" class="flex items-center justify-center">
+                    <div id="logo-icon" class="transition-all duration-300">
+                         <img src="https://drive.google.com/thumbnail?id=1FcmY5GnSr6W5wWX1srT7zCHLe8alxwUX&sz=s120" 
+                              alt="Logo SMAN 5 Palu" 
+                              class="w-8 h-8 object-contain">
+                    </div>
+
+                    <!-- Back Button -->
+                    <button id="back-btn" onclick="goBack()" class="hidden group p-2 hover:bg-slate-100 rounded-full transition-all active:scale-90 focus:outline-none">
+                        <i data-lucide="chevron-left" class="text-slate-600 group-hover:text-blue-600 w-6 h-6"></i>
+                    </button>
+                </div>
+                
+                <!-- Title & Branding -->
+                <div class="flex flex-col">
+                    <h1 id="app-title" class="text-sm sm:text-base font-bold text-slate-800 leading-tight">
+                        Gateway App SMAN 5 Palu
+                    </h1>
+                    <p id="app-subtitle" class="text-[10px] sm:text-xs text-slate-500 font-medium uppercase tracking-wider">Pusat Layanan Digital</p>
+                </div>
+            </div>
+
+            <!-- Header Right: Clock (Optional decorative element) -->
+            <div id="digital-clock" class="hidden md:block text-xs font-semibold text-slate-400 bg-slate-50 px-3 py-1 rounded-full border border-slate-100">
+                Loading...
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 flex flex-col relative w-full overflow-hidden">
+        
+        <!-- VIEW 1: Grid Menu -->
+        <div id="grid-view" class="flex-1 overflow-y-auto w-full h-full custom-scrollbar bg-slate-50/50">
+            <div class="px-6 py-8 sm:py-12 max-w-7xl mx-auto w-full">
+                
+                <!-- Welcome Section -->
+                <div class="mb-10 animate-fade-in text-center" style="animation-delay: 0.1s;">
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+                        Selamat Datang
+                    </h2>
+                    <p class="text-slate-500 text-sm sm:text-base mt-2 max-w-xl mx-auto">
+                        Akses layanan administrasi dan akademik SMAN 5 Palu dalam satu platform terintegrasi.
+                    </p>
+                </div>
+
+
+                <!-- Grid Cards Container -->
+                <div id="apps-container" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6 pb-12">
+                    <!-- Cards injected by JS -->
+                </div>
+
+                <!-- Footer -->
+                <footer class="mt-8 border-t border-slate-200 pt-8 pb-10 text-center">
+                    <p class="text-slate-400 text-[11px] sm:text-xs font-medium uppercase tracking-widest">
+                        &copy; <span id="year"></span> Gateway App SMAN 5 Palu • All Rights Reserved
+                    </p>
+                </footer>
+            </div>
+        </div>
+
+        <!-- VIEW 2: App Viewer (Iframe) -->
+        <div id="iframe-view" class="hidden flex-1 w-full h-full relative bg-white">
+            
+            <!-- Loader Overlay -->
+            <div id="loader" class="absolute inset-0 flex flex-col items-center justify-center bg-white z-50 transition-opacity duration-300">
+                <div class="relative flex items-center justify-center">
+                    <div class="h-14 w-14 rounded-full border-4 border-slate-100 border-t-blue-600 animate-spin"></div>
+                    <img src="https://drive.google.com/thumbnail?id=1FcmY5GnSr6W5wWX1srT7zCHLe8alxwUX&sz=s60" class="absolute w-6 h-6 animate-pulse" alt="logo">
+                </div>
+                <p class="mt-4 text-slate-400 text-xs font-bold uppercase tracking-widest animate-pulse">Menghubungkan...</p>
+            </div>
+
+            <!-- The Content Frame -->
+            <iframe id="app-frame" 
+                    src="" 
+                    allow="camera; microphone; geolocation; clipboard-read; clipboard-write"
+                    class="absolute inset-0 w-full h-full border-none opacity-0 transition-opacity duration-700 ease-in-out">
+            </iframe>
+        </div>
+
+    </main>
+
+    <script>
+        // --- CONFIGURATION ---
+        const apps = [
+            {
+                id: 'gwali',
+                name: 'GWali',
+                url: 'https://script.google.com/macros/s/AKfycbwDeynJ7RdsSvOsStAjYhuU4CBoPlug-yiKhxsYhtN7aZqV2maro1RGBMZK0XKBCkmS/exec',
+                icon: 'graduation-cap',
+                bgClass: 'bg-blue-50 text-blue-600 group-hover:bg-blue-600',
+                description: 'Sistem Manajemen Guru Wali'
+            },
+            {
+                id: 'ngajargasih',
+                name: 'NGAJARGASIH',
+                url: 'https://script.google.com/macros/s/AKfycbyb2LR7UJlQmBMD48KzG7D9HcH2ea5-8akzQIv5aADFiJGqSujeXUMZHpYYU2A2l8Au/exec',
+                icon: 'presentation',
+                bgClass: 'bg-emerald-50 text-emerald-600 group-hover:bg-emerald-600',
+                description: 'Manajemen Monitoring Guru Di Kelas'
+            },
+            {
+                id: 'sp2s',
+                name: 'SP2S',
+                url: 'https://script.google.com/macros/s/AKfycbygfHtkmVON8VUoX-hIX9Z7Dfzc9O1YOdNXyFDtuQBla1cAvZVLZI6TnKUlcybsbPST5A/exec',
+                icon: 'trophy',
+                bgClass: 'bg-orange-50 text-orange-500 group-hover:bg-orange-500',
+                description: 'Sistem Pendataan Prestasi Siswa'
+            },
+            {
+                id: 'ibsmanli',
+                name: 'IBSMANLI',
+                url: 'https://script.google.com/macros/s/AKfycby3IuLOvE3QIDwK5Gn-6PSAYqBSo-6ciY_Sx6LHLnIoid_PvzmvdreqSKs1QBttLrWsWg/exec',
+                icon: 'database',
+                bgClass: 'bg-indigo-50 text-indigo-600 group-hover:bg-indigo-600',
+                description: 'Manajemen Inventaris Barang'
+            },
+            {
+                id: 'alumni',
+                name: 'ALUMNI SMANLI',
+                url: 'https://script.google.com/macros/s/AKfycbw7kmvLLSvPXBlGEsWfNe-YUd2TIZDsim0ctkqPCziAbYznJs-WXuOWdWb9mBhBQeocWQ/exec',
+                icon: 'user',
+                bgClass: 'bg-rose-50 text-rose-600 group-hover:bg-rose-600',
+                description: 'Portal Manajemen Alumni'
+            },
+
+            {
+                id: 'kti',
+                name: 'KTI SMANLI',
+                url: 'https://script.google.com/macros/s/AKfycbxzFVj_s0v-7Vl8GIA_i7iHiCj6Zl1ajzrCA7C-xlnQGmY1VZ61eZGEGQ4vE9P6uxsHAA/exec',
+                icon: 'files',
+                bgClass: 'bg-rose-50 text-rose-600 group-hover:bg-rose-600',
+                description: 'Manajemen Karya Tulis Ilmiah'
+            }
+
+        ];
+
+        // --- DOM ELEMENTS ---
+        const gridView = document.getElementById('grid-view');
+        const iframeView = document.getElementById('iframe-view');
+        const appFrame = document.getElementById('app-frame');
+        const loader = document.getElementById('loader');
+        const appTitle = document.getElementById('app-title');
+        const appSubtitle = document.getElementById('app-subtitle');
+        const logoIcon = document.getElementById('logo-icon');
+        const backBtn = document.getElementById('back-btn');
+        const appsContainer = document.getElementById('apps-container');
+        const clockEl = document.getElementById('digital-clock');
+
+        // --- INITIALIZATION ---
+        function init() {
+            document.getElementById('year').textContent = new Date().getFullYear();
+            renderApps();
+            startClock();
+            checkLastState();
+            lucide.createIcons();
+        }
+
+        function renderApps() {
+            apps.forEach((app, index) => {
+                const card = document.createElement('button');
+                card.className = "group relative flex flex-col bg-white rounded-2xl p-5 border border-slate-200/60 shadow-sm hover:shadow-xl hover:shadow-blue-900/5 hover:-translate-y-1.5 hover:border-blue-200 transition-all duration-300 text-left overflow-hidden w-full animate-fade-in";
+                card.style.animationDelay = `${(index * 0.05) + 0.2}s`;
+                card.onclick = () => openApp(app);
+
+                card.innerHTML = `
+                    <div class="w-12 h-12 rounded-xl ${app.bgClass} flex items-center justify-center mb-4 transition-all duration-300 group-hover:text-white shadow-sm">
+                        <i data-lucide="${app.icon}" class="w-6 h-6"></i>
+                    </div>
+                    <div class="relative z-10">
+                        <h3 class="text-[15px] font-bold text-slate-800 mb-1.5 group-hover:text-blue-600 leading-tight transition-colors">${app.name}</h3>
+                        <p class="text-[11px] text-slate-400 font-medium leading-relaxed group-hover:text-slate-500 line-clamp-2">${app.description}</p>
+                    </div>
+                    <div class="absolute top-4 right-4 opacity-0 scale-75 group-hover:opacity-100 group-hover:scale-100 transition-all duration-300">
+                        <div class="p-1.5 rounded-full bg-blue-50 text-blue-600">
+                            <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                        </div>
+                    </div>
+                `;
+                appsContainer.appendChild(card);
+            });
+        }
+
+        function startClock() {
+            const updateTime = () => {
+                const now = new Date();
+                clockEl.textContent = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            };
+            updateTime();
+            setInterval(updateTime, 1000);
+        }
+
+        // --- NAVIGATION LOGIC ---
+
+        function openApp(app) {
+            localStorage.setItem('gas_active_app', app.id);
+
+            // UI Switch
+            gridView.classList.add('hidden');
+            iframeView.classList.remove('hidden');
+            
+            // Header Update
+            appTitle.textContent = app.name;
+            appSubtitle.textContent = "Aplikasi Sedang Berjalan";
+            logoIcon.classList.add('hidden');
+            backBtn.classList.remove('hidden');
+
+            // Load Iframe
+            loader.classList.remove('opacity-0', 'pointer-events-none');
+            appFrame.classList.remove('opacity-100');
+            appFrame.classList.add('opacity-0');
+            
+            appFrame.src = app.url;
+
+            appFrame.onload = () => {
+                setTimeout(() => {
+                    loader.classList.add('opacity-0', 'pointer-events-none');
+                    appFrame.classList.remove('opacity-0');
+                    appFrame.classList.add('opacity-100');
+                }, 300);
+            };
+        }
+
+        function goBack() {
+            localStorage.removeItem('gas_active_app');
+
+            // UI Switch
+            iframeView.classList.add('hidden');
+            gridView.classList.remove('hidden');
+
+            // Header Reset
+            appTitle.textContent = 'Gateway App SMAN 5 Palu';
+            appSubtitle.textContent = 'Pusat Layanan Digital';
+            backBtn.classList.add('hidden');
+            logoIcon.classList.remove('hidden');
+
+            // Clear Iframe
+            appFrame.src = '';
+            appFrame.classList.add('opacity-0');
+        }
+
+        function checkLastState() {
+            const lastAppId = localStorage.getItem('gas_active_app');
+            if (lastAppId) {
+                const savedApp = apps.find(a => a.id === lastAppId);
+                if (savedApp) openApp(savedApp);
+            }
+        }
+
+        // Run Init
+        window.addEventListener('DOMContentLoaded', init);
+
+    </script>
+</body>
+</html>
